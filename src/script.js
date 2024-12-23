@@ -2,6 +2,8 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import GUI from 'lil-gui'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import holographicVertexShader from './shaders/holographic/vertex.glsl';
+import holographicFragmentShader from "./shaders/holographic/fragment.glsl"
 
 /**
  * Base
@@ -26,8 +28,7 @@ const sizes = {
     height: window.innerHeight
 }
 
-window.addEventListener('resize', () =>
-{
+window.addEventListener('resize', () => {
     // Update sizes
     sizes.width = window.innerWidth
     sizes.height = window.innerHeight
@@ -69,15 +70,17 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 gui
     .addColor(rendererParameters, 'clearColor')
-    .onChange(() =>
-    {
+    .onChange(() => {
         renderer.setClearColor(rendererParameters.clearColor)
     })
 
 /**
  * Material
  */
-const material = new THREE.MeshBasicMaterial()
+const material = new THREE.ShaderMaterial({
+    vertexShader: holographicVertexShader,
+    fragmentShader: holographicFragmentShader
+})
 
 /**
  * Objects
@@ -102,12 +105,10 @@ scene.add(sphere)
 let suzanne = null
 gltfLoader.load(
     './suzanne.glb',
-    (gltf) =>
-    {
+    (gltf) => {
         suzanne = gltf.scene
-        suzanne.traverse((child) =>
-        {
-            if(child.isMesh)
+        suzanne.traverse((child) => {
+            if (child.isMesh)
                 child.material = material
         })
         scene.add(suzanne)
@@ -119,13 +120,11 @@ gltfLoader.load(
  */
 const clock = new THREE.Clock()
 
-const tick = () =>
-{
+const tick = () => {
     const elapsedTime = clock.getElapsedTime()
 
     // Rotate objects
-    if(suzanne)
-    {
+    if (suzanne) {
         suzanne.rotation.x = - elapsedTime * 0.1
         suzanne.rotation.y = elapsedTime * 0.2
     }
