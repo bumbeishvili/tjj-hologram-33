@@ -109,7 +109,7 @@ const torusKnot = new THREE.Mesh(
     material
 )
 torusKnot.position.x = 3
-scene.add(torusKnot)
+//scene.add(torusKnot)
 
 // Sphere
 const sphere = new THREE.Mesh(
@@ -117,12 +117,12 @@ const sphere = new THREE.Mesh(
     material
 )
 sphere.position.x = - 3
-scene.add(sphere)
+//scene.add(sphere)
 
 // Suzanne
 let suzanne = null
 gltfLoader.load(
-    './suzanne.glb',
+    './3d_t.i.e_fighter_-_star_wars_model.glb',
     (gltf) => {
         suzanne = gltf.scene
         suzanne.traverse((child) => {
@@ -146,8 +146,8 @@ const tick = () => {
 
     // Rotate objects
     if (suzanne) {
-        suzanne.rotation.x = - elapsedTime * 0.1
-        suzanne.rotation.y = elapsedTime * 0.2
+        suzanne.rotation.y = - elapsedTime * 0.1
+        //suzanne.rotation.y = elapsedTime * 0.2
     }
 
     sphere.rotation.x = - elapsedTime * 0.1
