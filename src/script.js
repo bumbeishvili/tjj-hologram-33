@@ -11,6 +11,7 @@ import holographicFragmentShader from "./shaders/holographic/fragment.glsl"
 // Debug
 const gui = new GUI()
 
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -77,9 +78,26 @@ gui
 /**
  * Material
  */
+
+const materialParameters = {};
+materialParameters.color = "#70c1ff";
+
+gui.addColor(materialParameters, 'color')
+    .onChange(() => {
+        material.uniforms.uColor.value.set(materialParameters.color)
+    })
+
 const material = new THREE.ShaderMaterial({
     vertexShader: holographicVertexShader,
-    fragmentShader: holographicFragmentShader
+    fragmentShader: holographicFragmentShader,
+    uniforms: {
+        uTime: new THREE.Uniform(0),
+        uColor: new THREE.Uniform(new THREE.Color('#70c1ff'))
+    },
+    transparent: true,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
 })
 
 /**
@@ -122,6 +140,9 @@ const clock = new THREE.Clock()
 
 const tick = () => {
     const elapsedTime = clock.getElapsedTime()
+    // Update Material
+
+    material.uniforms.uTime.value = elapsedTime
 
     // Rotate objects
     if (suzanne) {
